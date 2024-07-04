@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket Chat</title>
+    <style>
+        
+        #chatbox {
+            width: 1110px;
+            margin-left: 250px;
+            margin-top: -740px;
+            height: 520px;
+            padding: 60px;
+            background-color:#333333 ;
+            overflow-y: auto;
+        }
+
+        p.chat-message {
+            background-color: #f1f1f1;
+            width: 300px;
+            margin-top: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    font-family: Arial;
+    font-size: 14px;
+    color: black;
+    border-radius: 10px; /* Add border radius */
+        }
+
+        .send-button {
+  display: inline-block;
+  padding: 10px 20px;
+  height: 70px;
+  width: 90px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #333333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+  background-color: #939496;
+}
+
+
+
+        .input-box {
+  width: 75%;
+  margin-top: 5px;
+  margin-left: 250px;
+  height: 50px;
+  padding: 10px;
+  font-size: 14px;
+  color: white;
+  background-color: #333333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-box:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+
+
+        .contact-list {
+  width: 200px;
+  height: 700px;
+  background-color: #333333;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(253, 248, 248, 0.1);
+}
+
+.contact-list h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.contact-item {
+  display: flex;
+  margin-left: -30px;
+  align-items: left;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.contact-item:hover {
+  background-color: #5f5e5e;
+}
+
+.contact-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-info h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.contact-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="contact-list">
+        <h2>Contacts</h2>
+        <ul>
+          <li class="contact-item">
+            <img src="image1.png" alt="Profile Picture">
+            <div class="contact-info">
+              <h3>Muntazer</h3>
+              <p>Last message</p>
+            </div>
+          </li>
+          <li class="contact-item">
+            <img src="image1.png" alt="Profile Picture">
+            <div class="contact-info">
+              <h3>Abdullah</h3>
+              <p>Last message</p>
+            </div>
+          </li>
+          <li class="contact-item">
+            <img src="image1.png" alt="Profile Picture">
+            <div class="contact-info">
+              <h3>Hamza</h3>
+              <p>Last message</p>
+            </div>
+          </li>
+          <!-- Add more contact items as needed -->
+        </ul>
+      </div>
+      
+
+
+    <div id="chatbox"></div>
+    <input class="input-box" type="text" id="message" placeholder="Type your message...">
+    <button class="send-button" onclick="sendMessage()">Send</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const messageInput = document.getElementById('message');
+        var num =0 ;
+
+        // Connect to the Socket.IO server
+        const socket = io();
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('message', function(message) {
+            appendMessage(message);
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Disconnected from server');
+        });
+
+        function sendMessage() {
+            num++;
+            const message =  messageInput.value;
+            socket.emit('message', message);
+            messageInput.value = '';
+        }
+
+        function appendMessage(message) {
+            
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+
+            messageElement.classList.add('chat-message');
+    
+
+            chatbox.appendChild(messageElement);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
